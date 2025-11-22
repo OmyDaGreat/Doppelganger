@@ -13,5 +13,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "fibonacci"
+rootProject.name = "doppelganger"
 include(":library")

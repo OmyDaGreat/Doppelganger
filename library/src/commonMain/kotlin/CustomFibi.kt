@@ -1,4 +1,4 @@
-package xyz.malefic.lib.fibonacci
+package xyz.malefic.doppelganger
 
 /**
  * Generates an infinite Fibonacci sequence starting from the `firstElement` and `secondElement`.
@@ -8,9 +8,9 @@ package xyz.malefic.lib.fibonacci
  */
 fun generateFibi() =
     sequence {
-        var a = firstElement
+        var a = 1
         yield(a)
-        var b = secondElement
+        var b = 2
         yield(b)
         while (true) {
             val c = a + b
@@ -19,15 +19,3 @@ fun generateFibi() =
             b = c
         }
     }
-
-/**
- * The first element of the Fibonacci sequence.
- * This value is expected to be provided by platform-specific implementations.
- */
-expect val firstElement: Int
-
-/**
- * The second element of the Fibonacci sequence.
- * This value is expected to be provided by platform-specific implementations.
- */
-expect val secondElement: Int
