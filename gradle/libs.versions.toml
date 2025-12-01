@@ -9,12 +9,14 @@ dokka = "2.1.0"
 compose = "1.9.3"
 skiko = "0.9.30"
 androidsvg = "1.4"
+kobweb = "0.23.3"
 
 [libraries]
 kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
 kermit = { group = "co.touchlab", name = "kermit", version.ref = "kermit" }
 skiko = { group = "org.jetbrains.skiko", name = "skiko", version.ref = "skiko" }
 androidsvg = { group = "com.caverock", name = "androidsvg", version.ref = "androidsvg" }
+kobweb-compose = { module = "com.varabyte.kobweb:kobweb-compose", version.ref = "kobweb" }
 
 [plugins]
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
@@ -24,3 +26,4 @@ kotlinter = { id = "org.jmailen.kotlinter", version.ref = "kotlinter" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 compose = { id = "org.jetbrains.compose", version.ref = "compose" }
 compose-kotlin = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+kobweb-library = { id = "com.varabyte.kobweb.library", version.ref = "kobweb" }

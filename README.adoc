@@ -1,10 +1,10 @@
-= Doppelganger - SVG DSL for Compose Multiplatform
+= Doppelganger - SVG DSL for Kotlin
 :toc: left
 :toclevels: 3
 :source-highlighter: highlightjs
 :icons: font
 
-A comprehensive and type-safe DSL for creating and rendering SVG graphics in Compose Multiplatform applications.
+A comprehensive and type-safe DSL for creating and rendering SVG graphics in Compose Multiplatform applications and Kobweb sites.
 
 == Overview
 
@@ -15,6 +15,7 @@ Doppelganger is an SVG wrapper library that provides a Kotlin DSL for creating S
 * 🎨 **Type-safe DSL** - Kotlin-first API for building SVG elements
 * 🌐 **Multiplatform** - Works on JVM, Android, iOS, JS, and WebAssembly
 * 🧩 **Composable** - Integrates seamlessly with Compose UI
+* 🌐 **Kobweb Support** - First-class support for Kobweb web applications (JS-only)
 * 📐 **Comprehensive** - Supports all major SVG elements and attributes
 * 🎭 **Gradients & Effects** - Built-in support for gradients, clipping, and masking
 * 🔧 **Path DSL** - Intuitive API for creating complex paths
@@ -28,7 +29,7 @@ Add Doppelganger to your Compose Multiplatform project:
 [source,kotlin]
 ----
 dependencies {
-    implementation("xyz.malefic:doppelganger:1.0.0")
+    implementation("xyz.malefic:doppelganger:$version")
 }
 ----
 
@@ -52,6 +53,29 @@ fun MyCircle() {
             fill("steelblue")
             stroke("navy")
             strokeWidth(2)
+        }
+    }
+}
+----
+
+=== Kobweb Usage
+
+Doppelganger includes special support for https://github.com/varabyte/kobweb[Kobweb] applications. See link:KOBWEB_USAGE.md[Kobweb Usage Guide] for detailed documentation.
+
+[source,kotlin]
+----
+@Composable
+fun MyKobwebSvg() {
+    SvgImage(
+        modifier = Modifier.size(200.px)
+    ) {
+        width(200)
+        height(200)
+        circle {
+            cx(100)
+            cy(100)
+            r(80)
+            fill("steelblue")
         }
     }
 }

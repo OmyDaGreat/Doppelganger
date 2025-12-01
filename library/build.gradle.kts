@@ -92,6 +92,12 @@ kotlin {
                 implementation(libs.androidsvg)
             }
         }
+        val jsMain by getting {
+            dependencies {
+                implementation(compose.html.core)
+                implementation(libs.kobweb.compose)
+            }
+        }
     }
 }
 
