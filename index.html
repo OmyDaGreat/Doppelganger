@@ -47,8 +47,16 @@
 1.0.0        </div>
         <div class="navigation-controls">
         <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
+                <button class="platform-tag platform-selector jvm-like" data-active="" aria-pressed="true"
+                        data-filter=":library/androidMain">android</button>
                 <button class="platform-tag platform-selector common-like" data-active="" aria-pressed="true"
                         data-filter=":library/commonMain">common</button>
+                <button class="platform-tag platform-selector common-like" data-active="" aria-pressed="true"
+                        data-filter=":library/iosMain">ios</button>
+                <button class="platform-tag platform-selector jvm-like" data-active="" aria-pressed="true"
+                        data-filter=":library/jvmMain">jvm</button>
+                <button class="platform-tag platform-selector common-like" data-active="" aria-pressed="true"
+                        data-filter=":library/webMain">web</button>
             <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
                 <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox"
                         data-role="dropdown-toggle"
@@ -63,12 +71,44 @@
                             <i class="ui-kit-icon ui-kit-icon_cross"></i>
                         </button>
                     </div>
+                        <li role="option" class="dropdown--option platform-selector-option jvm-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":library/androidMain"
+                                       data-filter=":library/androidMain"/>
+                                <span class="checkbox--icon"></span>
+                                android
+                            </label>
+                        </li>
                         <li role="option" class="dropdown--option platform-selector-option common-like" tabindex="0">
                             <label class="checkbox">
                                 <input type="checkbox" class="checkbox--input" id=":library/commonMain"
                                        data-filter=":library/commonMain"/>
                                 <span class="checkbox--icon"></span>
                                 common
+                            </label>
+                        </li>
+                        <li role="option" class="dropdown--option platform-selector-option common-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":library/iosMain"
+                                       data-filter=":library/iosMain"/>
+                                <span class="checkbox--icon"></span>
+                                ios
+                            </label>
+                        </li>
+                        <li role="option" class="dropdown--option platform-selector-option jvm-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":library/jvmMain"
+                                       data-filter=":library/jvmMain"/>
+                                <span class="checkbox--icon"></span>
+                                jvm
+                            </label>
+                        </li>
+                        <li role="option" class="dropdown--option platform-selector-option common-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":library/webMain"
+                                       data-filter=":library/webMain"/>
+                                <span class="checkbox--icon"></span>
+                                web
                             </label>
                         </li>
                 </ul>
@@ -104,24 +144,28 @@
         </nav>
         <div id="resizer" class="resizer" data-item-type="BAR"></div>
         <div id="main" data-item-type="SECTION" role="main">
-<div class="main-content" id="content" pageIds="library::////PointingToDeclaration//-654899660">
+<div class="main-content" id="content" pageIds="library::////PointingToDeclaration//-1707305102">
   <div class="breadcrumbs"></div>
   <div class="cover ">
     <h1 class="cover"><span><span>library</span></span></h1>
   </div>
   <h2 class="">Packages</h2>
-  <div class="table"><a data-name="-1382052092%2FPackages%2F-654899660" anchor-label="xyz.malefic.doppelganger" id="-1382052092%2FPackages%2F-654899660" data-filterable-set=":library/commonMain"></a>
-    <div class="table-row table-row_platform-tagged" data-filterable-current=":library/commonMain" data-filterable-set=":library/commonMain">
+  <div class="table"><a data-name="-1382052092%2FPackages%2F-1707305102" anchor-label="xyz.malefic.doppelganger" id="-1382052092%2FPackages%2F-1707305102" data-filterable-set=":library/commonMain,:library/androidMain,:library/iosMain,:library/jvmMain,:library/webMain"></a>
+    <div class="table-row table-row_platform-tagged" data-filterable-current=":library/commonMain,:library/androidMain,:library/iosMain,:library/jvmMain,:library/webMain" data-filterable-set=":library/commonMain,:library/androidMain,:library/iosMain,:library/jvmMain,:library/webMain">
       <div>
         <div class="main-subrow ">
           <div class=""><span class="inline-flex">
               <div><a href="library/xyz.malefic.doppelganger/index.html">xyz.malefic.doppelganger</a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1382052092%2FPackages%2F-654899660"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1382052092%2FPackages%2F-1707305102"></span>
                 <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
               </span></span></div>
           <div class="pull-right platform-tags--wrapper">
             <div class="platform-tags no-gutters">
+              <div class="platform-tag jvm-like">android</div>
               <div class="platform-tag common-like">common</div>
+              <div class="platform-tag common-like">ios</div>
+              <div class="platform-tag jvm-like">jvm</div>
+              <div class="platform-tag common-like">web</div>
             </div>
           </div>
         </div>
