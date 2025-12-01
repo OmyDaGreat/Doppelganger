@@ -2,8 +2,11 @@ $dokka.format:html-v1
 $dokka.linkExtension:html
 $dokka.location:xyz.malefic.doppelganger////PointingToDeclaration/library/xyz.malefic.doppelganger/index.html
 $dokka.location:xyz.malefic.doppelganger//RawSvg/#kotlin.String#androidx.compose.ui.Modifier#kotlin.String?/PointingToDeclaration/library/xyz.malefic.doppelganger/-raw-svg.html
+$dokka.location:xyz.malefic.doppelganger//RawSvgTag/#kotlin.String#com.varabyte.kobweb.compose.ui.Modifier#kotlin.Function1[org.jetbrains.compose.web.attributes.AttrsScope[org.w3c.dom.HTMLElement],kotlin.Unit]/PointingToDeclaration/library/xyz.malefic.doppelganger/-raw-svg-tag.html
 $dokka.location:xyz.malefic.doppelganger//SvgContent/#xyz.malefic.doppelganger.Svg#androidx.compose.ui.Modifier#kotlin.String?/PointingToDeclaration/library/xyz.malefic.doppelganger/-svg-content.html
 $dokka.location:xyz.malefic.doppelganger//SvgImage/#androidx.compose.ui.Modifier#kotlin.String?#kotlin.Function1[xyz.malefic.doppelganger.SvgBuilder,kotlin.Unit]/PointingToDeclaration/library/xyz.malefic.doppelganger/-svg-image.html
+$dokka.location:xyz.malefic.doppelganger//SvgImage/#com.varabyte.kobweb.compose.ui.Modifier#kotlin.Function1[org.jetbrains.compose.web.attributes.AttrsScope[org.w3c.dom.HTMLElement],kotlin.Unit]#kotlin.Function1[xyz.malefic.doppelganger.SvgBuilder,kotlin.Unit]/PointingToDeclaration/library/xyz.malefic.doppelganger/-svg-image.html
+$dokka.location:xyz.malefic.doppelganger//SvgTag/#xyz.malefic.doppelganger.Svg#com.varabyte.kobweb.compose.ui.Modifier#kotlin.Function1[org.jetbrains.compose.web.attributes.AttrsScope[org.w3c.dom.HTMLElement],kotlin.Unit]/PointingToDeclaration/library/xyz.malefic.doppelganger/-svg-tag.html
 $dokka.location:xyz.malefic.doppelganger//createClippedShape/#/PointingToDeclaration/library/xyz.malefic.doppelganger/create-clipped-shape.html
 $dokka.location:xyz.malefic.doppelganger//createCurvyPath/#/PointingToDeclaration/library/xyz.malefic.doppelganger/create-curvy-path.html
 $dokka.location:xyz.malefic.doppelganger//createGradientRect/#/PointingToDeclaration/library/xyz.malefic.doppelganger/create-gradient-rect.html
