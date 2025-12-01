@@ -84,7 +84,6 @@ kotlin {
         val jvmMain by getting {
             dependencies {
                 implementation(compose.desktop.currentOs)
-                implementation(libs.skiko)
             }
         }
         val androidMain by getting {
@@ -98,7 +97,52 @@ kotlin {
                 implementation(libs.kobweb.compose)
             }
         }
+        val jvmTest by getting {
+            dependencies {
+                implementation(compose.desktop.currentOs)
+                implementation(compose.material)
+                implementation(compose.runtime)
+                implementation(compose.foundation)
+                implementation(compose.ui)
+                // Required runtime dependencies
+                implementation(libs.collection)
+                implementation(libs.lifecycle.runtime)
+                implementation(libs.lifecycle.viewmodel)
+            }
+        }
+        val jsTest by getting {
+            dependencies {
+                implementation(compose.html.core)
+                implementation(libs.kobweb.compose)
+            }
+        }
     }
+}
+
+// Task to run the JVM test application
+tasks.register<JavaExec>("runJvmExamples") {
+    group = "application"
+    description = "Run the JVM Desktop SVG Examples application"
+
+    dependsOn("jvmTestClasses")
+
+    val jvmTarget = kotlin.targets.getByName("jvm")
+    val testCompilation = jvmTarget.compilations.getByName("test")
+    val mainCompilation = jvmTarget.compilations.getByName("main")
+
+    classpath(testCompilation.runtimeDependencyFiles)
+    classpath(testCompilation.output.allOutputs)
+    classpath(mainCompilation.output.allOutputs)
+
+    mainClass.set("xyz.malefic.doppelganger.SvgExamplesAppKt")
+
+    // Required for Compose Desktop
+    jvmArgs(
+        "-Dfile.encoding=UTF-8",
+        // Wayland support for compositors like niri
+        "-Dawt.toolkit.name=WLToolkit",
+        "-Djava.awt.headless=false",
+    )
 }
 
 android {
