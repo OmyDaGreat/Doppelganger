@@ -4,4 +4,6 @@ plugins {
     alias(libs.plugins.vanniktech.mavenPublish) apply false
     alias(libs.plugins.dokka) apply false
     alias(libs.plugins.kotlinter) apply false
+    alias(libs.plugins.compose) apply false
+    alias(libs.plugins.compose.kotlin) apply false
 }

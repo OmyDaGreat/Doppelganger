@@ -1,87 +1,81 @@
-= Kotlin Multiplatform Library Template
+= Doppelganger - SVG DSL for Compose Multiplatform
 :toc: left
 :toclevels: 3
 :source-highlighter: highlightjs
 :icons: font
 
-A comprehensive template for creating Kotlin Multiplatform libraries with publishing to Maven Central.
+A comprehensive and type-safe DSL for creating and rendering SVG graphics in Compose Multiplatform applications.
 
 == Overview
 
-This template provides everything you need to build and publish a Kotlin Multiplatform library to Maven Central. It includes support for multiple platforms and comes pre-configured with modern development tools.
-
-== Supported Platforms
-
-This template supports the following platforms:
-
-[cols="1,2", options="header"]
-|===
-|Platform |Description
-|JVM |Java Virtual Machine applications, including Compose Desktop
-|Android |Android applications and libraries
-|Native |iOS applications
-|Web |JavaScript & WebAssembly applications
-|===
+Doppelganger is an SVG wrapper library that provides a Kotlin DSL for creating SVG graphics in Compose Multiplatform applications. Write SVG markup using type-safe Kotlin code and render it seamlessly across all supported platforms.
 
 == Features
 
-=== Kotlin Multiplatform
-Full Kotlin Multiplatform setup with support for a variety of  targets.
+* 🎨 **Type-safe DSL** - Kotlin-first API for building SVG elements
+* 🌐 **Multiplatform** - Works on JVM, Android, iOS, JS, and WebAssembly
+* 🧩 **Composable** - Integrates seamlessly with Compose UI
+* 📐 **Comprehensive** - Supports all major SVG elements and attributes
+* 🎭 **Gradients & Effects** - Built-in support for gradients, clipping, and masking
+* 🔧 **Path DSL** - Intuitive API for creating complex paths
 
-=== Publishing to Maven Central
-Pre-configured publishing setup using the vanniktech Maven publish plugin with support for:
+== Quick Start
 
-* Automatic signing with GPG keys
-* Publishing to Sonatype Central Portal
-* GitHub Actions integration for automated releases
+=== Installation
 
-=== Development Tools
+Add Doppelganger to your Compose Multiplatform project:
 
-[cols="1,1,2", options="header"]
-|===
-|Tool |Version |Purpose
-|Kotlinter |Latest |Kotlin linting and code formatting
-|Dokka |Latest |API documentation generation
-|Kermit |Latest |Multiplatform logging library
-|===
+[source,kotlin]
+----
+dependencies {
+    implementation("xyz.malefic:doppelganger:1.0.0")
+}
+----
 
-=== Project Configuration
-Centralized configuration using gradle.properties for easy customization:
+=== Basic Usage
 
-* Developer information
-* Repository details
-* Publishing coordinates
-* Library metadata
+Create an SVG circle in your Composable:
 
-== Getting Started
+[source,kotlin]
+----
+@Composable
+fun MyCircle() {
+    SvgImage(modifier = Modifier.size(100.dp)) {
+        width(100)
+        height(100)
+        viewBox(0, 0, 100, 100)
+        
+        circle {
+            cx(50)
+            cy(50)
+            r(40)
+            fill("steelblue")
+            stroke("navy")
+            strokeWidth(2)
+        }
+    }
+}
+----
 
-=== Prerequisites
+=== Supported Elements
 
-* JDK 11 or higher
-* Gradle 8.0 or higher
-* Xcode (for iOS development, macOS only)
+* **Basic Shapes**: rect, circle, ellipse, line, polyline, polygon
+* **Path**: Complete path DSL with moveTo, lineTo, curveTo, arcTo, etc.
+* **Text**: text and tspan elements with full styling
+* **Containers**: g (group), defs, symbol, use
+* **Gradients**: linearGradient, radialGradient with stops
+* **Effects**: clipPath, mask
 
-=== Setup
+== Building from Source
 
-1. Clone this template repository
-2. Update the `gradle.properties` file with your information:
-   * Change `user`, `dev`, `mail`, `devURL` to your details
-   * Update `repo`, `g`, `artifact`, `desc` for your library
-   * Set the initial version `v`
-
-3. Rename the library module if desired
-4. Start developing your library in the `library/src` directory
-
-=== Building
-
-To build the library for all platforms:
+To build the library:
 
 [source,bash]
 ----
-./gradlew build
+./gradlew assemble
 ----
 
-To run tests on all platforms:
+To run tests:
 
 [source,bash]
 ----

@@ -19,6 +19,8 @@ plugins {
     alias(libs.plugins.vanniktech.mavenPublish)
     alias(libs.plugins.dokka)
     alias(libs.plugins.kotlinter)
+    alias(libs.plugins.compose)
+    alias(libs.plugins.compose.kotlin)
 }
 
 group = g
@@ -68,11 +70,26 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(libs.kermit)
+                implementation(compose.runtime)
+                implementation(compose.foundation)
+                implementation(compose.animation)
+                implementation(compose.ui)
             }
         }
         val commonTest by getting {
             dependencies {
                 implementation(libs.kotlin.test)
+            }
+        }
+        val jvmMain by getting {
+            dependencies {
+                implementation(compose.desktop.currentOs)
+                implementation(libs.skiko)
+            }
+        }
+        val androidMain by getting {
+            dependencies {
+                implementation(libs.androidsvg)
             }
         }
     }
