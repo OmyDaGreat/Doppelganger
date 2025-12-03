@@ -112,7 +112,6 @@ kotlin {
         }
         val jsTest by getting {
             dependencies {
-                implementation(compose.html.core)
                 implementation(libs.kobweb.compose)
             }
         }
