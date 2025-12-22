@@ -41,7 +41,7 @@ kotlin {
                 .get()
                 .toInt()
 
-        withJava() // enable java compilation support
+        withJava()
         withHostTestBuilder {}.configure {}
         withDeviceTestBuilder {
             sourceSetTreeName = "test"
