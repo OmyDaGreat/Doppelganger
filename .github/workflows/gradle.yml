@@ -23,9 +23,7 @@ jobs:
             os: ubuntu-latest
           - target: wasmJsTest
             os: ubuntu-latest
-          - target: testDebugUnitTest
-            os: ubuntu-latest
-          - target: testReleaseUnitTest
+          - target: testAndroid
             os: ubuntu-latest
     runs-on: ${{ matrix.os }}
 
@@ -43,19 +41,6 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
-    - name: Set up Node.js
-      if: matrix.target == 'jsTest' || matrix.target == 'wasmJsTest'
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18'
-    - name: Enable Corepack and prepare Yarn
-      if: matrix.target == 'jsTest' || matrix.target == 'wasmJsTest'
-      run: |
-        corepack enable
-        corepack prepare yarn@stable --activate
-    - name: Install JS dependencies (run postinstall scripts so wasm is built)
-      if: matrix.target == 'jsTest' || matrix.target == 'wasmJsTest'
-      run: yarn install --frozen-lockfile
     - name: Install Chromium
       if: matrix.target == 'jsTest' || matrix.target == 'wasmJsTest'
       run: sudo apt-get update && sudo apt-get install -y chromium-browser
