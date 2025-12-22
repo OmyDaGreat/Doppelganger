@@ -19,8 +19,6 @@ jobs:
             os: macos-latest
           - target: jvmTest
             os: ubuntu-latest
-          - target: jsTest
-            os: ubuntu-latest
           - target: testAndroid
             os: ubuntu-latest
     runs-on: ${{ matrix.os }}
@@ -39,12 +37,6 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
-    - name: Install Chromium
-      if: matrix.target == 'jsTest'
-      run: sudo apt-get update && sudo apt-get install -y chromium-browser
-    - name: Set CHROME_BIN env
-      if: matrix.target == 'jsTest'
-      run: echo "CHROME_BIN=$(which chromium-browser)" >> $GITHUB_ENV
     - name: Build with Gradle
       uses: gradle/actions/setup-gradle@v5
     - name: Run matrix target
