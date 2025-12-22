@@ -1,5 +1,4 @@
 [versions]
-agp = "8.12.0"
 collection = "1.5.0"
 kotlin = "2.3.0"
 android-minSdk = "24"
@@ -11,6 +10,8 @@ compose = "1.9.3"
 androidsvg = "1.4"
 kobweb = "0.23.3"
 lifecycleRuntime = "2.10.0"
+agp = "8.13.2"
+vanniktech = "0.35.0"
 
 [libraries]
 collection = { module = "androidx.collection:collection", version.ref = "collection" }
@@ -22,9 +23,9 @@ lifecycle-runtime = { module = "androidx.lifecycle:lifecycle-runtime", version.r
 lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel", version.ref = "lifecycleRuntime" }
 
 [plugins]
-androidLibrary = { id = "com.android.library", version.ref = "agp" }
+androidLibrary = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
-vanniktech-mavenPublish = { id = "com.vanniktech.maven.publish", version = "0.35.0" }
+vanniktech-mavenPublish = { id = "com.vanniktech.maven.publish", version.ref = "vanniktech" }
 kotlinter = { id = "org.jmailen.kotlinter", version.ref = "kotlinter" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 compose = { id = "org.jetbrains.compose", version.ref = "compose" }
