@@ -11,15 +11,15 @@ import org.jetbrains.skia.Data
 import org.jetbrains.skia.svg.SVGDOM
 
 @Composable
-actual fun RawSvg(
-    svgString: String,
+actual fun SvgFromBytes(
+    svgBytes: ByteArray,
     modifier: Modifier,
     contentDescription: String?,
 ) {
     val svgDom =
-        remember(svgString) {
+        remember(svgBytes) {
             try {
-                SVGDOM(Data.makeFromBytes(svgString.encodeToByteArray()))
+                SVGDOM(Data.makeFromBytes(svgBytes))
             } catch (e: Exception) {
                 null
             }

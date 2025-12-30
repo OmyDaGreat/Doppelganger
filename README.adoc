@@ -1,41 +1,49 @@
-= Doppelganger - SVG DSL for Kotlin
+= Doppelganger
 :toc: left
 :toclevels: 3
-:source-highlighter: highlightjs
+:source-highlighter: rouge
 :icons: font
 
-A comprehensive and type-safe DSL for creating and rendering SVG graphics in Compose Multiplatform applications and Kobweb sites.
+*Type-safe SVG DSL for Kotlin Compose Multiplatform*
 
-== Overview
+image:https://img.shields.io/maven-central/v/xyz.malefic/doppelganger[Maven Central,link=https://central.sonatype.com/artifact/xyz.malefic/doppelganger]
+image:https://img.shields.io/github/license/OmyDaGreat/Doppelganger[License,link=LICENSE]
 
-Doppelganger is an SVG wrapper library that provides a Kotlin DSL for creating SVG graphics in Compose Multiplatform applications. Write SVG markup using type-safe Kotlin code and render it seamlessly across all supported platforms.
+Doppelganger is a comprehensive SVG library for Kotlin that provides a type-safe DSL for creating and rendering SVG graphics across all Compose Multiplatform targets. Write SVG markup using intuitive Kotlin code and render it seamlessly on JVM, Android, iOS, JavaScript, and WebAssembly.
 
 == Features
 
-* 🎨 **Type-safe DSL** - Kotlin-first API for building SVG elements
-* 🌐 **Multiplatform** - Works on JVM, Android, iOS, JS, and WebAssembly
-* 🧩 **Composable** - Integrates seamlessly with Compose UI
-* 🌐 **Kobweb Support** - First-class support for Kobweb web applications (JS-only)
-* 📐 **Comprehensive** - Supports all major SVG elements and attributes
-* 🎭 **Gradients & Effects** - Built-in support for gradients, clipping, and masking
-* 🔧 **Path DSL** - Intuitive API for creating complex paths
+* 🎨 **Type-Safe DSL** - Intuitive Kotlin-first API with full IDE support
+* 🌐 **True Multiplatform** - Native support for JVM, Android, iOS, JS, and Wasm
+* 🧩 **Compose Integration** - Works seamlessly with Compose UI across all platforms
+* 🌐 **Kobweb Support** - First-class integration for Kobweb web applications
+* ⚡ **KSP Plugin** - Compile-time SVG resource generation with zero runtime overhead
+* 📐 **Comprehensive Elements** - All SVG elements: shapes, paths, text, gradients, masks, and more
+* 🎭 **Advanced Features** - Gradients, clipping paths, masks, and transformations
+* 🔧 **Path DSL** - Fluent API for complex path construction
 
 == Quick Start
 
 === Installation
 
-Add Doppelganger to your Compose Multiplatform project:
+Add Doppelganger to your `build.gradle.kts`:
 
 [source,kotlin]
 ----
-dependencies {
-    implementation("xyz.malefic:doppelganger:$version")
+kotlin {
+    sourceSets {
+        commonMain {
+            dependencies {
+                implementation("xyz.malefic:doppelganger:1.0.1")
+            }
+        }
+    }
 }
 ----
 
-=== Basic Usage
+=== Basic Example
 
-Create an SVG circle in your Composable:
+Create SVG graphics using the type-safe DSL:
 
 [source,kotlin]
 ----
@@ -50,233 +58,827 @@ fun MyCircle() {
             cx(50)
             cy(50)
             r(40)
-            fill("steelblue")
-            stroke("navy")
+            fill(Color.Blue)
+            stroke(Color.Black)
             strokeWidth(2)
         }
     }
 }
 ----
 
-=== Kobweb Usage
+== Platform Support
 
-Doppelganger includes special support for https://github.com/varabyte/kobweb[Kobweb] applications. See link:KOBWEB_USAGE.md[Kobweb Usage Guide] for detailed documentation.
+Doppelganger works on all Compose Multiplatform targets:
+
+[cols="1,3"]
+|===
+|Platform |Implementation
+
+|**JVM Desktop**
+|Native rendering via Compose Desktop's Skia canvas
+
+|**Android**
+|AndroidSVG library integration for efficient rendering
+
+|**iOS**
+|Native Skia rendering through Compose Multiplatform
+
+|**JavaScript**
+|DOM manipulation with raw SVG injection + Kobweb integration
+
+|**WebAssembly**
+|DOM-based rendering with full Compose Web support
+|===
+
+== Core API
+
+=== SvgImage - Inline SVG Creation
+
+The primary way to create and render SVG graphics:
 
 [source,kotlin]
 ----
 @Composable
-fun MyKobwebSvg() {
-    SvgImage(
-        modifier = Modifier.size(200.px)
-    ) {
+fun GradientExample() {
+    SvgImage(modifier = Modifier.size(200.dp)) {
         width(200)
         height(200)
+        
+        defs {
+            linearGradient {
+                id("myGradient")
+                x1("0%")
+                y1("0%")
+                x2("100%")
+                y2("100%")
+                
+                stop {
+                    offset("0%")
+                    stopColor("purple")
+                }
+                stop {
+                    offset("100%")
+                    stopColor("pink")
+                }
+            }
+        }
+        
+        rect {
+            width(200)
+            height(200)
+            fill("url(#myGradient)")
+        }
+    }
+}
+----
+
+=== SvgContent - Reusable SVG Elements
+
+Create and reuse SVG elements:
+
+[source,kotlin]
+----
+val mySvg = svg {
+    width(100)
+    height(100)
+    circle {
+        cx(50)
+        cy(50)
+        r(40)
+        fill(Color.Red)
+    }
+}
+
+@Composable
+fun MyComponent() {
+    SvgContent(
+        svgElement = mySvg,
+        modifier = Modifier.size(100.dp)
+    )
+}
+----
+
+== Kobweb Integration
+
+For https://github.com/varabyte/kobweb[Kobweb] web applications, Doppelganger provides specialized APIs that work with Kobweb's `Modifier` system.
+
+=== Installation for Kobweb
+
+[source,kotlin]
+----
+kotlin {
+    js {
+        browser()
+    }
+    
+    sourceSets {
+        val jsMain by getting {
+            dependencies {
+                implementation("xyz.malefic:doppelganger:1.0.1")
+                // Kobweb dependencies
+                implementation("com.varabyte.kobweb:kobweb-core")
+                implementation("com.varabyte.kobweb:kobweb-silk")
+            }
+        }
+    }
+}
+
+// Optional: Add KSP for resource generation
+dependencies {
+    add("kspCommonMainMetadata", "xyz.malefic:doppelganger-ksp:1.0.1")
+}
+
+// Configure KSP to generate into Kobweb public resources
+ksp {
+    arg("doppelganger.output.package", "public.images.icons")
+}
+----
+
+**Generate Icon Files:**
+
+[source,kotlin]
+----
+// In commonMain:
+@SvgResource
+fun homeIcon() = svg {
+    width(24)
+    height(24)
+    path {
+        d("M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z")
+        fill("currentColor")
+    }
+}
+
+// After KSP runs, use in Kobweb:
+@Page
+@Composable
+fun HomePage() {
+    Image(
+        src = "/images/icons/homeIcon.svg",
+        modifier = Modifier.size(24.px)
+    )
+}
+----
+
+=== Kobweb APIs
+
+==== KobwebSvgImage - Inline DSL (Recommended)
+
+[source,kotlin]
+----
+@Page
+@Composable
+fun HomePage() {
+    KobwebSvgImage(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(300.px)
+            .backgroundColor(Colors.White)
+            .borderRadius(8.px)
+    ) {
+        width(400)
+        height(300)
+        
         circle {
-            cx(100)
-            cy(100)
-            r(80)
+            cx(200)
+            cy(150)
+            r(100)
             fill("steelblue")
         }
     }
 }
 ----
 
-=== Supported Elements
+==== KobwebSvg - Reusable Elements
 
-* **Basic Shapes**: rect, circle, ellipse, line, polyline, polygon
-* **Path**: Complete path DSL with moveTo, lineTo, curveTo, arcTo, etc.
-* **Text**: text and tspan elements with full styling
-* **Containers**: g (group), defs, symbol, use
-* **Gradients**: linearGradient, radialGradient with stops
-* **Effects**: clipPath, mask
+[source,kotlin]
+----
+@Composable
+fun MyIcon() {
+    val icon = remember {
+        svg {
+            width(24)
+            height(24)
+            path {
+                d("M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z")
+                fill("currentColor")
+            }
+        }
+    }
+    
+    KobwebSvg(
+        svgElement = icon,
+        modifier = Modifier.size(24.px).color(Colors.Blue)
+    )
+}
+----
 
-== Building from Source
+==== RawKobwebSvg - From String
 
-To build the library:
+[source,kotlin]
+----
+@Composable
+fun ExternalSvg() {
+    RawKobwebSvg(
+        svgString = """<svg width="100" height="100">
+            <circle cx="50" cy="50" r="40" fill="purple"/>
+        </svg>""",
+        modifier = Modifier.margin(1.em)
+    )
+}
+----
+
+=== Kobweb with KSP
+
+Create reusable icon libraries:
+
+[source,kotlin]
+----
+// commonMain - Define icons
+@SvgResource
+fun homeIcon() = svg {
+    width(24)
+    height(24)
+    path {
+        d("M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z")
+        fill("currentColor")
+    }
+}
+
+// jsMain - Use in Kobweb pages
+@Page
+@Composable
+fun HomePage() {
+    KobwebSvg(
+        svgElement = homeIcon(),
+        modifier = Modifier.size(24.px).color(Colors.Blue)
+    )
+}
+----
+
+=== Kobweb Styling & Attributes
+
+[source,kotlin]
+----
+KobwebSvgImage(
+    modifier = Modifier
+        .fillMaxWidth()
+        .padding(1.em)
+        .backgroundColor(Colors.LightGray)
+        .borderRadius(8.px)
+        .boxShadow(0.px, 2.px, 4.px, Colors.Black.copyf(alpha = 0.1f))
+        .cursor(Cursor.Pointer),
+    attrs = {
+        id("my-svg")
+        classes("svg-container")
+        attr("aria-label", "Decorative graphic")
+    }
+) {
+    circle {
+        cx(100)
+        cy(100)
+        r(80)
+        fill("#4CAF50")
+    }
+}
+----
+
+**Note:** Kobweb functions use `com.varabyte.kobweb.compose.ui.Modifier`, not `androidx.compose.ui.Modifier`, and are only available on the JavaScript target.
+
+== SVG Elements
+
+Doppelganger supports the complete SVG specification:
+
+=== Basic Shapes
+
+[source,kotlin]
+----
+svg {
+    // Rectangle
+    rect {
+        x(10); y(10)
+        width(80); height(80)
+        fill("coral")
+        rx(5) // rounded corners
+    }
+    
+    // Circle
+    circle {
+        cx(50); cy(50); r(40)
+        fill("steelblue")
+    }
+    
+    // Ellipse
+    ellipse {
+        cx(50); cy(50)
+        rx(40); ry(30)
+        fill("purple")
+    }
+    
+    // Line
+    line {
+        x1(0); y1(0)
+        x2(100); y2(100)
+        stroke("black")
+        strokeWidth(2)
+    }
+    
+    // Polyline
+    polyline {
+        points("0,0 50,25 50,75 100,100")
+        fill("none")
+        stroke("red")
+        strokeWidth(2)
+    }
+    
+    // Polygon
+    polygon {
+        points("50,0 100,100 0,100")
+        fill("green")
+    }
+}
+----
+
+=== Paths
+
+Doppelganger includes a powerful Path DSL:
+
+[source,kotlin]
+----
+svg {
+    path {
+        // String-based path data
+        d("M 10,30 A 20,20 0,0,1 50,30")
+        fill("none")
+        stroke("blue")
+        strokeWidth(2)
+    }
+    
+    // Or use the DSL builder
+    path {
+        d {
+            moveTo(10, 10)
+            lineTo(50, 50)
+            curveTo(70, 10, 90, 30, 100, 10)
+            closePath()
+        }
+        fill("orange")
+    }
+}
+----
+
+=== Text
+
+[source,kotlin]
+----
+svg {
+    text {
+        x(50)
+        y(50)
+        textAnchor("middle")
+        fontSize(24)
+        fontFamily("Arial")
+        fill("black")
+        content("Hello SVG!")
+    }
+    
+    // Multi-line text with tspan
+    text {
+        x(10)
+        y(30)
+        tspan {
+            content("First line")
+            x(10)
+            dy(0)
+        }
+        tspan {
+            content("Second line")
+            x(10)
+            dy(20)
+        }
+    }
+}
+----
+
+=== Gradients
+
+[source,kotlin]
+----
+svg {
+    defs {
+        // Linear gradient
+        linearGradient {
+            id("grad1")
+            x1("0%"); y1("0%")
+            x2("100%"); y2("0%")
+            
+            stop { offset("0%"); stopColor("yellow") }
+            stop { offset("100%"); stopColor("red") }
+        }
+        
+        // Radial gradient
+        radialGradient {
+            id("grad2")
+            cx("50%"); cy("50%"); r("50%")
+            
+            stop { offset("0%"); stopColor("white") }
+            stop { offset("100%"); stopColor("blue") }
+        }
+    }
+    
+    rect {
+        fill("url(#grad1)")
+        width(200); height(100)
+    }
+    
+    circle {
+        fill("url(#grad2)")
+        cx(100); cy(100); r(80)
+    }
+}
+----
+
+=== Groups and Transformations
+
+[source,kotlin]
+----
+svg {
+    g {
+        // Apply transformations to the group
+        transform("translate(50,50) rotate(45)")
+        
+        rect { width(40); height(40); fill("red") }
+        circle { cx(20); cy(20); r(10); fill("blue") }
+    }
+}
+----
+
+=== Clipping and Masking
+
+[source,kotlin]
+----
+svg {
+    defs {
+        clipPath {
+            id("myClip")
+            circle { cx(50); cy(50); r(40) }
+        }
+    }
+    
+    rect {
+        width(100); height(100)
+        fill("coral")
+        clipPath("url(#myClip)")
+    }
+}
+----
+
+== KSP Plugin: Compile-Time SVG Generation
+
+Doppelganger includes a powerful Kotlin Symbol Processing (KSP) plugin that generates SVG resource files from your DSL code at compile time.
+
+=== Setup
+
+Add the Doppelganger plugin and KSP to your project:
+
+[source,kotlin]
+----
+plugins {
+    id("com.google.devtools.ksp") version "2.3.0"
+    id("xyz.malefic.doppelganger") version "1.0.1"
+}
+
+dependencies {
+    implementation("xyz.malefic:doppelganger:1.0.1")
+    add("kspCommonMainMetadata", "xyz.malefic:doppelganger-ksp:1.0.1")
+}
+
+// Optional: Configure output location (auto-detects by default)
+doppelganger {
+    outputPackage.set("public.images")  // Type-safe!
+    outputSubdir.set("icons")
+    autoDetect.set(true)  // Default: true
+}
+----
+
+**Smart Defaults** - The plugin automatically detects your project type:
+
+* **Kobweb projects**: `public/images` (accessible via `/images/icon.svg`)
+* **Multiplatform with commonMain**: `files/drawable` (Compose Resources)
+* **JS-only projects**: `public/images` (web resources)
+
+=== Usage
+
+Annotate your SVG DSL functions with `@SvgResource`:
+
+[source,kotlin]
+----
+@SvgResource
+fun homeIcon() = svg {
+    width(24)
+    height(24)
+    viewBox(0, 0, 24, 24)
+    
+    path {
+        d("M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z")
+        fill("currentColor")
+    }
+}
+
+@SvgResource(resourceName = "custom_name")
+fun myLogo() = svg {
+    // Custom filename: custom_name.svg
+    width(200)
+    height(100)
+    // ... your SVG content
+}
+----
+
+Generate the SVG files:
 
 [source,bash]
 ----
-./gradlew assemble
+./gradlew :library:generateSvgResources
 ----
 
-To run tests:
+=== Configuration
 
-[source,bash]
+The Doppelganger Gradle plugin provides type-safe configuration with smart defaults:
+
+[source,kotlin]
 ----
-./gradlew allTests
-----
-
-To generate documentation:
-
-[source,bash]
-----
-./gradlew dokkaGenerate
-----
-
-== Publishing to Maven Central
-
-This template uses a similar packaging secret method as other Malefic projects, making it easy to set up automated publishing.
-
-[IMPORTANT]
-====
-For publishing to work, the following GitHub secrets must be configured in your repository:
-
-* `GPG_KEY_ID`: The ID of your GPG key
-* `GPG_PASSPHRASE`: The passphrase for your GPG key  
-* `GPG_PRIVATE_KEY`: Your GPG private key
-* `SONATYPE_TOKEN_XML`: Your Sonatype Central Portal user token in XML format
-====
-
-=== Setting Up Secrets
-
-==== GPG Key Setup
-1. Generate a GPG key pair:
-[source,bash]
-----
-gpg --full-generate-key
+doppelganger {
+    // Output package path (maps to directory structure)
+    outputPackage.set("public.images.icons")
+    
+    // Optional subdirectory within the package
+    outputSubdir.set("")
+    
+    // Enable/disable automatic project detection
+    autoDetect.set(true)  // Default: true
+}
 ----
 
-2. Export your private key:
-[source,bash]
+==== Automatic Detection
+
+With `autoDetect = true` (default), the plugin automatically configures the output location:
+
+.Detection Logic
+|===
+|Project Type |Default Output |Access Path
+
+|Kobweb (has kobweb plugin)
+|`public.images`
+|`/images/icon.svg`
+
+|Multiplatform with commonMain
+|`files/drawable`
+|`Res.readBytes("files/drawable/icon.svg")`
+
+|JS-only or other
+|`public.images`
+|`/images/icon.svg`
+|===
+
+==== Manual Configuration
+
+**For Kobweb Web Resources:**
+[source,kotlin]
 ----
-gpg --armor --export-secret-keys YOUR_KEY_ID > private_key.gpg
+doppelganger {
+    outputPackage.set("public.images.icons")
+}
+
+// Generated files accessible via:
+Image(src = "/images/icons/homeIcon.svg")
 ----
 
-3. Get your key ID:
-[source,bash]
+**For Compose Multiplatform Resources:**
+[source,kotlin]
 ----
-gpg --list-secret-keys --keyid-format=long
+doppelganger {
+    outputPackage.set("files")
+    outputSubdir.set("svg")
+}
+
+// Access via Compose Resources API
+val svgBytes = Res.readBytes("files/svg/homeIcon.svg")
 ----
 
-4. Upload your public key to a keyserver:
-[source,bash]
+**Custom Web Resource Path:**
+[source,kotlin]
 ----
-gpg --keyserver keyserver.ubuntu.com --send-keys YOUR_KEY_ID
+doppelganger {
+    outputPackage.set("public.assets.graphics")
+}
+
+// Files at: src/jsMain/resources/public/assets/graphics/
+// URL: /assets/graphics/homeIcon.svg
 ----
 
-==== Sonatype Setup
-1. Create an account on https://central.sonatype.com/
-2. Register your namespace (e.g., `io.github.yourusername`)
-3. Generate a user token from the Account page
-4. Copy the XML token block for the GitHub secret
+==== Legacy String-Based Configuration
 
-=== Publishing Process
+For advanced use cases or when not using the Gradle plugin, you can still configure via KSP args:
 
-The template includes a GitHub Actions workflow that automatically publishes releases:
-
-1. Create a new release on GitHub
-2. The workflow will automatically build and publish to Maven Central
-3. Artifacts will be available after Sonatype review (usually 15-30 minutes)
-
-To publish manually:
-
-[source,bash]
+[source,kotlin]
 ----
-./gradlew publishToMavenCentral
+ksp {
+    arg("doppelganger.output.package", "public.images")
+    arg("doppelganger.output.subdir", "icons")
+}
+----
+
+=== Generated Files
+
+This creates SVG files in the configured location:
+
+[source]
+----
+library/src/commonMain/composeResources/files/
+├── homeIcon.svg
+└── custom_name.svg
+----
+
+=== How It Works
+
+The KSP plugin architecture consists of two modules:
+
+1. **library** module - Contains the `@SvgResource` annotation and core DSL (multiplatform)
+2. **processor** module - KSP processor that detects annotated functions (JVM-only)
+
+The workflow is:
+
+1. **Compilation**: KSP scans your code for `@SvgResource` annotations
+2. **Task Execution**: The `generateSvgResources` Gradle task executes the annotated DSL functions
+3. **File Generation**: SVG files are written to `src/commonMain/composeResources/files/`
+4. **Resource Access**: Use generated files via Compose Resources API
+
+=== Benefits
+
+* ✅ **Type Safety** - SVG structure validated at compile time
+* ✅ **Zero Runtime Overhead** - Pre-generated static resources
+* ✅ **Version Control** - Generated SVG files can be committed and reviewed
+* ✅ **Reusability** - Use functions directly or as generated files
+* ✅ **IDE Support** - Full autocomplete and refactoring
+
+=== Troubleshooting
+
+**Files not generating?**
+
+* Verify the annotation is imported correctly
+* Ensure function returns `Svg` type
+* Run KSP: `./gradlew :library:kspCommonMainKotlinMetadata`
+* Check output: `library/src/commonMain/composeResources/files/`
+
+**Access generated files:**
+
+[source,kotlin]
+----
+// Using Compose Resources API
+val svgBytes = Res.readBytes("files/homeIcon.svg")
+val svgString = svgBytes.decodeToString()
 ----
 
 == Project Structure
 
 [source]
 ----
-MultiLibTemplate/
-├── .github/
-│   └── workflows/
-│       ├── gradle.yml         # Testing workflow
-│       ├── deploy-docs.yml    # Dokka workflow
-│       └── publish.yml        # Publishing workflow
-├── library/                   # Main library module
-│   ├── build.gradle.kts      # Library-specific build configuration
+Doppelganger/
+├── processor/               # KSP processor for resource generation (JVM)
+│   └── src/main/kotlin/
+├── library/                # Main library (multiplatform)
 │   └── src/
-│       ├── commonMain/        # Common multiplatform code
-│       ├── commonTest/        # Common tests
-│       ├── jvmMain/          # JVM-specific code
-│       ├── jvmTest/          # JVM-specific tests
-│       ├── androidMain/      # Android-specific code
-│       ├── androidTest/      # Android-specific tests
-│       ├── iosMain/          # iOS-specific code
-│       ├── iosTest/          # iOS-specific tests
-│       ├── macosMain/        # macOS-specific code
-│       ├── macosTest/        # macOS-specific tests
-│       ├── jsMain/           # JavaScript-specific code
-│       ├── jsTest/           # JavaScript-specific tests
-│       ├── wasmMain/         # WebAssembly-specific code
-│       ├── wasmTest/         # WebAssembly-specific tests
-│       ├── linuxMain/        # Linux-specific code
-│       └── linuxTest/        # Linux-specific tests
-├── build.gradle.kts          # Root build configuration
-├── gradle.properties         # Project configuration
-├── settings.gradle.kts       # Gradle settings
-└── README.adoc              # This file
+│       ├── commonMain/     # Core DSL, @SvgResource annotation, and common rendering
+│       ├── jvmMain/       # JVM/Desktop rendering
+│       ├── androidMain/   # Android-specific rendering
+│       ├── jsMain/        # JS and Kobweb integration
+│       ├── wasmMain/      # WebAssembly support
+│       └── nativeMain/    # iOS and native targets
+├── build.gradle.kts
+├── settings.gradle.kts
+└── gradle.properties
 ----
 
-== Configuration
+== Building from Source
 
-All project configuration is centralized in `gradle.properties`:
+Clone and build the project:
 
-[source,properties]
+[source,bash]
 ----
-# Developer Information
-user=YourGitHubUsername
-dev=Your Full Name
-mail=your.email@example.com
-devURL=https://your-website.com
-
-# Project Information  
-repo=YourRepositoryName
-g=your.group.id
-artifact=your-artifact-name
-desc=Your library description
-inception=2025
-
-# Version
-v=1.0.0
+git clone https://github.com/OmyDaGreat/Doppelganger.git
+cd Doppelganger
+./gradlew build
 ----
 
-== Example Usage
+Run tests:
 
-The template includes a simple Fibonacci sequence generator as an example. Replace this with your own library code:
+[source,bash]
+----
+./gradlew allTests
+----
+
+Run JVM examples:
+
+[source,bash]
+----
+./gradlew :library:runJvmExamples
+----
+
+Generate documentation:
+
+[source,bash]
+----
+./gradlew dokkaHtml
+----
+
+== Module Artifacts
+
+Doppelganger is published as multiple artifacts:
+
+[cols="2,3,2"]
+|===
+|Artifact |Description |Required
+
+|`xyz.malefic:doppelganger`
+|Main library with DSL, rendering, and @SvgResource annotation
+|Yes
+
+|`xyz.malefic:doppelganger-ksp`
+|KSP processor for resource generation
+|Only if using KSP
+|===
+
+== Advanced Topics
+
+=== Custom Attributes
+
+Add any SVG attribute using the generic setter:
 
 [source,kotlin]
 ----
-// Common code
-fun generateFibi() =
-    sequence {
-        var a = firstElement
-        yield(a)
-        var b = secondElement
-        yield(b)
-        while (true) {
-            val c = a + b
-            yield(c)
-            a = b
-            b = c
-        }
+svg {
+    circle {
+        cx(50); cy(50); r(40)
+        set("data-id", "my-circle")
+        set("aria-label", "Decorative circle")
     }
+}
+----
 
-expect val firstElement: Int
-expect val secondElement: Int
+=== Color Support
 
-// Platform-specific implementations
-actual val firstElement = 3
-actual val secondElement = 4
+Use Compose Color or string-based colors:
+
+[source,kotlin]
+----
+svg {
+    rect {
+        fill(Color.Red)  // Compose Color
+        stroke("#FF0000") // Hex string
+        fill("rgb(255, 0, 0)") // RGB
+        fill("hsl(0, 100%, 50%)") // HSL
+    }
+}
+----
+
+=== Rendering to String
+
+Convert SVG to string representation:
+
+[source,kotlin]
+----
+val mySvg = svg {
+    circle {
+        cx(50); cy(50); r(40)
+        fill(Color.Blue)
+    }
+}
+
+val svgString = mySvg.render()
+// Output: <svg><circle cx="50" cy="50" r="40" fill="#0000FF"/></svg>
+----
+
+== Contributing
+
+We welcome contributions! To contribute:
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/my-feature`
+3. Make your changes with tests
+4. Ensure all tests pass: `./gradlew allTests`
+5. Format code: `./gradlew formatKotlin`
+6. Submit a pull request
+
+=== Code Style
+
+This project uses https://github.com/jeremymailen/kotlinter-gradle[Kotlinter] for code formatting:
+
+[source,bash]
+----
+./gradlew formatKotlin      # Format all code
+./gradlew lintKotlin        # Check formatting
 ----
 
 == License
 
-This template is licensed under the MIT License. Update the LICENSE file with your chosen license.
-
-== Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests for new functionality
-5. Submit a pull request
-
-== Resources
-
-* https://kotlinlang.org/docs/multiplatform.html[Kotlin Multiplatform Documentation]
-* https://central.sonatype.org/[Maven Central Portal]
-* https://vanniktech.github.io/gradle-maven-publish-plugin/[Vanniktech Maven Publish Plugin]
-* https://github.com/touchlab/Kermit[Kermit Logging Library]
+Doppelganger is licensed under the https://mit.malefic.xyz[MIT License].

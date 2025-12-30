@@ -5,15 +5,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 
 /**
- * Composable function to render SVG content
- * This is a common interface - platform-specific implementations handle actual rendering
+ * Composable function to render SVG content from an Svg element
  */
 @Composable
 fun SvgContent(
     svgElement: Svg,
     modifier: Modifier = Modifier,
     contentDescription: String? = null,
-) = RawSvg(svgElement.render(), modifier, contentDescription)
+) {
+    val svgBytes = remember(svgElement) { svgElement.render().encodeToByteArray() }
+    SvgFromBytes(svgBytes, modifier, contentDescription)
+}
 
 /**
  * Composable function to create and render SVG using DSL
@@ -32,11 +34,14 @@ fun SvgImage(
 }
 
 /**
- * Composable function to render raw SVG string
+ * Composable function to render SVG from byte array
+ * This can be used with Compose Resources by converting the resource to bytes first
+ *
+ * Platform-specific implementations handle actual rendering
  */
 @Composable
-expect fun RawSvg(
-    svgString: String,
+expect fun SvgFromBytes(
+    svgBytes: ByteArray,
     modifier: Modifier = Modifier,
     contentDescription: String? = null,
 )

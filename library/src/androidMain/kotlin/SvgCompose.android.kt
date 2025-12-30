@@ -12,15 +12,15 @@ import com.caverock.androidsvg.SVG
 import android.graphics.Canvas as AndroidCanvas
 
 @Composable
-actual fun RawSvg(
-    svgString: String,
+actual fun SvgFromBytes(
+    svgBytes: ByteArray,
     modifier: Modifier,
     contentDescription: String?,
 ) {
     val painter =
-        remember(svgString) {
+        remember(svgBytes) {
             try {
-                val svg = SVG.getFromString(svgString)
+                val svg = SVG.getFromString(svgBytes.decodeToString())
                 val width = (svg.documentWidth.takeIf { it > 0 } ?: 512f).toInt()
                 val height = (svg.documentHeight.takeIf { it > 0 } ?: 512f).toInt()
 

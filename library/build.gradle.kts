@@ -1,6 +1,8 @@
 import com.android.build.api.dsl.androidLibrary
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11
+import org.jmailen.gradle.kotlinter.tasks.FormatTask
+import org.jmailen.gradle.kotlinter.tasks.LintTask
 
 val user: String by project
 val dev: String by project
@@ -14,9 +16,9 @@ val desc: String by project
 val inception: String by project
 
 plugins {
-    alias(libs.plugins.androidLibrary)
-    alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.vanniktech.mavenPublish)
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.maven.publish)
     alias(libs.plugins.dokka)
     alias(libs.plugins.kotlinter)
     alias(libs.plugins.compose)
@@ -60,21 +62,20 @@ kotlin {
         browser {
             testTask {
                 useKarma {
-                    useChromiumHeadless()
+                    useFirefoxHeadless()
                 }
             }
         }
-        nodejs()
+        useEsModules()
     }
     wasmJs {
         browser {
             testTask {
                 useKarma {
-                    useChromiumHeadless()
+                    useFirefoxHeadless()
                 }
             }
         }
-        nodejs()
     }
 
     applyDefaultHierarchyTemplate()
@@ -88,6 +89,7 @@ kotlin {
                 implementation(compose.foundation)
                 implementation(compose.animation)
                 implementation(compose.ui)
+                implementation(compose.components.resources)
             }
         }
         val commonTest by getting {
@@ -108,9 +110,12 @@ kotlin {
         val jsMain by getting {
             dependencies {
                 implementation(compose.html.core)
-                implementation(libs.kobweb.compose)
+                implementation(libs.kobweb.core)
+                implementation(libs.kobweb.silk)
             }
         }
+        val jsTest by getting
+        val wasmJsTest by getting
         val jvmTest by getting {
             dependencies {
                 implementation(compose.desktop.currentOs)
@@ -118,44 +123,12 @@ kotlin {
                 implementation(compose.runtime)
                 implementation(compose.foundation)
                 implementation(compose.ui)
-                // Required runtime dependencies
                 implementation(libs.collection)
                 implementation(libs.lifecycle.runtime)
                 implementation(libs.lifecycle.viewmodel)
             }
         }
-        val jsTest by getting {
-            dependencies {
-                implementation(libs.kobweb.compose)
-            }
-        }
     }
-}
-
-// Task to run the JVM test application
-tasks.register<JavaExec>("runJvmExamples") {
-    group = "application"
-    description = "Run the JVM Desktop SVG Examples application"
-
-    dependsOn("jvmTestClasses")
-
-    val jvmTarget = kotlin.targets.getByName("jvm")
-    val testCompilation = jvmTarget.compilations.getByName("test")
-    val mainCompilation = jvmTarget.compilations.getByName("main")
-
-    classpath(testCompilation.runtimeDependencyFiles)
-    classpath(testCompilation.output.allOutputs)
-    classpath(mainCompilation.output.allOutputs)
-
-    mainClass.set("xyz.malefic.doppelganger.SvgExamplesAppKt")
-
-    // Required for Compose Desktop
-    jvmArgs(
-        "-Dfile.encoding=UTF-8",
-        // Wayland support for compositors like niri
-        "-Dawt.toolkit.name=WLToolkit",
-        "-Djava.awt.headless=false",
-    )
 }
 
 mavenPublishing {
@@ -194,5 +167,17 @@ mavenPublishing {
 dokka {
     pluginsConfiguration.html {
         footerMessage.set("&copy; 2025 $dev <$mail>")
+    }
+}
+
+tasks {
+    withType<LintTask> {
+        exclude("**/generated/**", "**/build/**")
+    }
+    withType<FormatTask> {
+        exclude("**/generated/**", "**/build/**")
+    }
+    withType<AbstractTestTask>().configureEach {
+        failOnNoDiscoveredTests = false
     }
 }

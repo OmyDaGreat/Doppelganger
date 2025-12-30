@@ -15,3 +15,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "doppelganger"
 include(":library")
+include(":gradle-plugin")

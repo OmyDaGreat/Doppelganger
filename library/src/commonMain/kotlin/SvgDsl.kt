@@ -1147,7 +1147,6 @@ class TextBuilder : SvgElementBuilder<Text>(Text()) {
      *
      * @receiver The text content.
      */
-    @Suppress("FunctionNaming")
     operator fun String.unaryPlus() {
         element.textContent = this
     }
@@ -1346,6 +1345,38 @@ class LinearGradientBuilder : SvgElementBuilder<LinearGradient>(LinearGradient()
      * @param value The y-coordinate value.
      */
     fun y2(value: Number) = attr("y2", value)
+
+    /**
+     * Sets the `x1` attribute of the `<linearGradient>` element, which defines the
+     * x-coordinate of the starting point of the gradient.
+     *
+     * @param value The x-coordinate value.
+     */
+    fun x1(value: String) = attr("x1", value)
+
+    /**
+     * Sets the `y1` attribute of the `<linearGradient>` element, which defines the
+     * y-coordinate of the starting point of the gradient.
+     *
+     * @param value The y-coordinate value.
+     */
+    fun y1(value: String) = attr("y1", value)
+
+    /**
+     * Sets the `x2` attribute of the `<linearGradient>` element, which defines the
+     * x-coordinate of the ending point of the gradient.
+     *
+     * @param value The x-coordinate value.
+     */
+    fun x2(value: String) = attr("x2", value)
+
+    /**
+     * Sets the `y2` attribute of the `<linearGradient>` element, which defines the
+     * y-coordinate of the ending point of the gradient.
+     *
+     * @param value The y-coordinate value.
+     */
+    fun y2(value: String) = attr("y2", value)
 
     /**
      * Sets the `gradientUnits` attribute of the `<linearGradient>` element, which
