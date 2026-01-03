@@ -26,6 +26,7 @@ repositories {
 dependencies {
     compileOnly(gradleApi())
     compileOnly(kotlin("gradle-plugin"))
+    compileOnly(libs.symbol.processing.api)
 }
 
 mavenPublishing {
@@ -61,7 +62,7 @@ mavenPublishing {
 
 gradlePlugin {
     plugins {
-        create("doppelgangerPlugin") {
+        register("doppelgangerPlugin") {
             id = "$g.doppelganger"
             implementationClass = "xyz.malefic.doppelganger.gradle.DoppelgangerPlugin"
             displayName = "Doppelganger SVG Plugin"

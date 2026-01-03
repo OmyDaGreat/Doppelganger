@@ -11,6 +11,7 @@ androidsvg = "1.4"
 kobweb = "0.23.3"
 lifecycleRuntime = "2.10.0"
 agp = "8.13.2"
+symbolProcessingApi = "2.3.4"
 vanniktech = "0.35.0"
 
 [libraries]
@@ -22,6 +23,7 @@ lifecycle-runtime = { module = "androidx.lifecycle:lifecycle-runtime", version.r
 lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel", version.ref = "lifecycleRuntime" }
 kobweb-core = { module = "com.varabyte.kobweb:kobweb-core", version.ref = "kobweb" }
 kobweb-silk = { module = "com.varabyte.kobweb:kobweb-silk", version.ref = "kobweb" }
+symbol-processing-api = { module = "com.google.devtools.ksp:symbol-processing-api", version.ref = "symbolProcessingApi" }
 
 [plugins]
 android-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }

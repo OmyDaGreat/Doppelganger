@@ -8,9 +8,9 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinSingleTargetExtension
 
 class DoppelgangerPlugin : Plugin<Project> {
     override fun apply(project: Project) {
-        val extension = project.extensions.create("doppelganger", DoppelgangerExtension::class.java)
+        project.pluginManager.apply("com.google.devtools.ksp")
 
-        // Set default: auto-detect enabled
+        val extension = project.extensions.create("doppelganger", DoppelgangerExtension::class.java)
         extension.autoDetect.convention(true)
 
         project.afterEvaluate {
@@ -18,7 +18,7 @@ class DoppelgangerPlugin : Plugin<Project> {
                 configureDefaults(project, extension)
             }
 
-            // Configure generation tasks for each Kotlin target
+            configureKspProcessor(project)
             configureGenerationTasks(project, extension)
         }
     }
@@ -27,7 +27,6 @@ class DoppelgangerPlugin : Plugin<Project> {
         project: Project,
         extension: DoppelgangerExtension,
     ) {
-        // Skip if user already configured
         if (extension.outputPackage.isPresent) {
             project.logger.info("Doppelganger: Using user-configured output package (${extension.outputPackage.get()})")
             return
@@ -72,6 +71,46 @@ class DoppelgangerPlugin : Plugin<Project> {
         }
     }
 
+    private fun configureKspProcessor(project: Project) {
+        val kotlinExt = project.extensions.findByType(KotlinProjectExtension::class.java) ?: return
+
+        // Get the jar containing this plugin (which includes the KSP processor)
+        val processorJar =
+            project.files(
+                DoppelgangerPlugin::class.java.protectionDomain.codeSource.location,
+            )
+
+        when (kotlinExt) {
+            is KotlinMultiplatformExtension -> {
+                try {
+                    project.dependencies.add("kspCommonMainMetadata", processorJar)
+                    project.logger.info("Doppelganger: Registered KSP processor for commonMain")
+                } catch (e: Exception) {
+                    project.logger.warn("Doppelganger: Could not register KSP for commonMain: ${e.message}")
+                }
+
+                kotlinExt.targets.forEach { target ->
+                    val configName = "ksp${target.name.replaceFirstChar { it.uppercase() }}"
+                    try {
+                        project.dependencies.add(configName, processorJar)
+                        project.logger.debug("Doppelganger: Registered KSP processor for ${target.name}")
+                    } catch (e: Exception) {
+                        project.logger.debug("Doppelganger: Skipping KSP config for ${target.name}: ${e.message}")
+                    }
+                }
+            }
+
+            is KotlinSingleTargetExtension<*> -> {
+                try {
+                    project.dependencies.add("ksp", processorJar)
+                    project.logger.info("Doppelganger: Registered KSP processor")
+                } catch (e: Exception) {
+                    project.logger.warn("Doppelganger: Could not register KSP: ${e.message}")
+                }
+            }
+        }
+    }
+
     private fun configureGenerationTasks(
         project: Project,
         extension: DoppelgangerExtension,
@@ -100,13 +139,18 @@ class DoppelgangerPlugin : Plugin<Project> {
                 task.compiledClasses.from(compilation.output.classesDirs)
                 task.runtimeClasspath.from(compilation.runtimeDependencyFiles)
 
-                task.generatedCodeDir.set(project.layout.buildDirectory.dir("generated/doppelganger/$targetName/kotlin"))
+                task.metadataFile.set(
+                    project.layout.buildDirectory
+                        .dir("generated/ksp/commonMain/resources")
+                        .map { it.file("svg-resources.json") },
+                )
+
                 task.generatedSvgDir.set(project.layout.buildDirectory.dir("generated/doppelganger/$targetName/resources"))
 
                 task.outputPackage.set(extension.outputPackage)
                 task.outputSubdir.set(extension.outputSubdir)
 
-                // Depend on compilation
+                task.dependsOn("kspKotlinCommonMainMetadata")
                 task.dependsOn(compilation.compileAllTaskName)
             }
 
@@ -128,13 +172,18 @@ class DoppelgangerPlugin : Plugin<Project> {
             task.compiledClasses.from(compilation.output.classesDirs)
             task.runtimeClasspath.from(compilation.runtimeDependencyFiles)
 
-            task.generatedCodeDir.set(project.layout.buildDirectory.dir("generated/doppelganger/kotlin"))
+            task.metadataFile.set(
+                project.layout.buildDirectory
+                    .dir("generated/ksp/${kotlinExt.target.name}/resources")
+                    .map { it.file("svg-resources.json") },
+            )
+
             task.generatedSvgDir.set(project.layout.buildDirectory.dir("generated/doppelganger/resources"))
 
             task.outputPackage.set(extension.outputPackage)
             task.outputSubdir.set(extension.outputSubdir)
 
-            // Depend on compilation
+            task.dependsOn("kspKotlin")
             task.dependsOn(compilation.compileAllTaskName)
         }
 
