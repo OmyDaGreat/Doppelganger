@@ -1,5 +1,5 @@
 [versions]
-collection = "1.5.0"
+collection = "1.6.0"
 kotlin = "2.3.0"
 android-minSdk = "24"
 android-compileSdk = "36"
