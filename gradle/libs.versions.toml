@@ -10,7 +10,7 @@ compose = "1.12.1"
 androidsvg = "1.4"
 kobweb = "0.25.1"
 lifecycleRuntime = "2.10.0"
-agp = "9.4.1"
+agp = "9.5.0"
 vanniktech = "0.37.0"
 
 [libraries]
